@@ -1,0 +1,212 @@
+---
+title: 'Computational Biology Lab 3: Introduction to R'
+author: "Amanda Hund"
+date: "2/3/2017"
+output: pdf_document
+---
+
+Now, we’re going to do a bunch of basic programming activities.  To make it more interesting, we’re going to tell a story.  Suppose you are a huge Star Wars fan, and you are having a movie-watching party at your home to watch Episodes IV-VI back-to-back-to-back.  As a well-practiced host/hostess, you want to make sure you have enough food and drink for everyone. You start the night with 5 bags of chips (Flaming Hot Cheetos, to be precise). Suppose you have 8 guests coming (not including yourself).
+
+(3) Make two variables, one that stores the number of bags of chips you start with, and one that stores the number of guests you have coming. Give your variables intelligent names that makes it easy to know what they represent. 
+
+Suppose you expect that each of your guests will eat an average of 0.4 bags of chips. Store this quantity in a new variable.
+
+```{r}
+#lab step #3:
+chips <- c(5)
+guests <- c(8)
+myself <- c(1)
+
+#lab step #5:
+chip_rate <- c(0.4)
+
+#how many chips will I have left? 
+
+chips_left <- chips - ((guests + myself) * chip_rate)
+
+chips_left
+
+```
+
+After watching the trilogy (and all the other movies), you and some of your friends decide to compare rankings of all seven movies (episodes I – VII).  The following table gives the rankings for you and some of your friends:
+
+Make 5 vectors, one for each person, containing his/her rankings in the order given here.  In other words, the first element of each vector should be the rank given to Episode I, the second element the ranking for Episode II  and so on. (Hint: use the “`c()`” function.).  Yes, this involves some slightly tedious typing.  That’s all part of the learning and reinforcing.  Add an appropriate comment.
+
+```{r}
+# Rankings for each person for each starwars movie. 
+
+self_rank <- c(7, 6, 5, 1, 2, 3, 4)
+Penny_rank <- c(5, 7, 6, 3, 1, 2, 4)
+Jenny_rank <- c(4, 3, 2, 7, 6, 5, 1)
+Lenny_rank <- c(1, 7, 3, 4, 6, 5, 2)
+Stewie_rank <- c(6, 7, 5, 4, 3, 1, 2)
+
+```
+Once you have data in a vector, it is often essential to be able to access, manipulate, and change specific elements (i.e., specific entries or numbers).  Across programming languages, this is done by “indexing” by position with integer numbers.  In R, indexing is done with square braces (“`[ ]`”) and numbers inside them. For example, suppose we have a vector named “x” that has 8 elements:  
+`x[3] # access third element of x`
+
+(9) Using indexing (with a single set of square braces “`[ ]`”), access Penny’s ranking for Episode IV, and store it in a new variable called “`PennyIV`”.  Make another variable for Lenny’s rank of Episode IV. Add an appropriate comment. 
+
+```{r}
+#Penny's rank for episode IV
+PennyIV <- Penny_rank[4]
+```
+
+Concatenate all 5 sets of rankings into a single data object.  (Hint:  use “`cbind()`”).  This new object should have 7 rows and 5 columns. Add an appropriate comment.  
+
+```{r}
+#Pull all ranking data into a data frame. 
+
+ranking_data <- cbind(self_rank, Penny_rank, Jenny_rank, Lenny_rank, Stewie_rank)
+```
+
+Use the “`str()`” function to inspect the structure of `PennyIV`, `Penny`, and the result of step #10.  In words (using a “comment” after the code), verbally describe the differences between these three data objects in terms of the results you get from `str()`.
+
+```{r}
+#Inspect structure of data frame and PennyIV
+str(PennyIV)
+str(ranking_data)
+```
+
+Now make a “data frame” using the 5 vectors of rankings.  The data frame should have the names of the people as the names of its columns.  Given what we already have in memory (from the steps above), there are two ways to do this, one using “`data.frame()`” and one using “`as.data.frame()`”.  Try BOTH ways in your code just for the sake of learning.
+
+data.frame: expects vectors
+as.data.frame: expects matrix
+
+```{r}
+#Make a data from of the rankings and people
+ranking_dataframe <- data.frame(ranking_data)
+ranking_dataframe.as <- as.data.frame(ranking_data)
+
+#Descriptors of different objects: 
+dim(ranking_dataframe)
+dim(ranking_data)
+str(ranking_dataframe)
+str(ranking_data)
+typeof(ranking_dataframe)
+typeof(ranking_data)
+
+```
+
+Verbally (using a comment after step #12) describe the similarities and differences between (a) the object created in step #10 using `cbind()` and (b) one of the objects created as a data frame in step #12.   To do this you will probably find it helpful to use `dim()`, `str()`, `==`, and `typeof()` and verbally describe the results of what you get from each.
+
+Verbal explanation: Both the matrix (cbind) and the data frame have the same 
+demensions. Str tells me that the cbind is a numeric matrix and that the data frame
+has 5 columns, the names, and that they are numeric with these values... 
+The data frame is a "list" and the matrix is a "double". 
+
+
+
+R can make vectors of characters or “strings” of characters too.  To tell R that something is a character or string, just put quotes around it.   
+
+ 
+(14) Make a vector of the Episode names as Roman numerals (i.e., “I”, “II”, and so on). (hint: use `c()`).  Add an appropriate comment. 
+
+```{r}
+#make vector of episode names: 
+episode_names <- c( "I", "II", "III", "IV", "V", "VI", "VII")
+```
+
+(15) Up to now, the results from steps #10 and #12 had names of the columns, but did not have names of the rows.  Using the result of step 14 and the `row.names()` function, name the rows of the objects created in steps 10 and 12.  Inspect the variables in your console window just to make sure this worked as intended.
+
+```{r}
+#make row_names the episodes
+row.names(ranking_dataframe) <- episode_names
+
+#check that it worked
+head(ranking_dataframe)
+```
+
+There are multiple ways to access specific elements or ranges of elements of that are stored in two-dimensional matrices or data frames in R.  Let’s start with the method that is the most universal across programming languages, and the one we used above in step #9: indexing by position with integer numbers inside square braces. For a two-dimensional object (e.g., our 7 x 5 matrix), we specify data we want by specifying two pieces of information: one to specify the row(s) we want, and one to specify the column(s).  The row specification is always first, and the column specification always second, with the two separated by a comma.  For example, suppose we have a matrix named “x” that has 8 rows and 4 columns:
+
+	x[2,3] # element in second row, third column
+	x[2,] # ALL of the second row
+	x[,3] # ALL of the third column 
+
+Let’s start with accessing one whole row or column  
+
+(16) Access the third row of the matrix produced from step #10
+
+```{r}
+#access the third row
+ranking_dataframe[3,]
+```
+
+(17) Access the fourth column from a data frame produced from step #12  
+
+```{r}
+#access the fourth column
+ranking_dataframe[,4]
+```
+
+Now, let’s do a specific element using any of the objects that work.
+(18) Access your ranking for Episode V.
+
+```{r}
+#access my ranking for episode V
+ranking_dataframe[1,5]
+```
+19) Access Penny’s ranking for Episode II.
+
+```{r}
+#access Penny's ranking for episode II
+ranking_dataframe[2,2]
+```
+
+Now, let’s do a range of rows:  
+(20) Access everyone’s rankings for episodes IV – VI. 
+
+```{r}
+#access everyone's ranking for episode 4-6
+ranking_dataframe[4:6,]
+```
+(21) Access everyone’s rankings for episodes II, V, and VII.  
+
+```{r}
+#access everyone's ranking for episode 2, 5, 7
+ranking_dataframe[c(2,5,7),]
+```
+
+Now let’s do specific rows and columns all at once:  
+
+(22) Access rankings for just Penny, Jenny, and Stewie for just episodes IV and VI.
+
+```{r}
+#access rankings fro penny, jenny, stewie for IV, VI
+ranking_dataframe[c(4,6), c(2,3,5)]
+```
+
+Now, let’s use indexing to assign new values to entries in a matrix or data frame.   
+
+(23) In one of the objects created in step 10 or 12, switch Lenny’s rankings for Episodes II and V.  There are several ways to do this, but make sure you get your index numbers right, and make sure you don’t delete one of the numbers you need!  Hints: Usually, this type of “swap” requires three lines of code and the use of one new variable.
+
+```{r}
+ranking_dataframe[2,4] <- 7
+ranking_dataframe[5,4] <- 6
+```
+
+Accessing elements, rows, and columns by number (indexing) is indeed the most universal way to work with specific entries in a matrix, but R does offer additional capabilities as well, which are sometimes very convenient.  Some of these apply to both matrices and data frames, and some apply only to data frames.   Let’s look first at using row and column names instead of numbers.  This can be done with matrices and with data frames.  For example, to get Penny’s rating of episode III, I could write `allRankings[3, 2]` (“3” for the row number for Episode III, “2” for the column number for Penny), but I could also write
+`allRankings[“III”, “Penny”]`.  The latter is less universal (you can’t do this in all programming languages), but does remove some guesswork for this kind of operation.  
+
+(24) Try the example I just gave (`allRankings[“III”, “Penny”]`) with the matrix from step 10 and with one of the data frames from step 12 just to show yourself that it works.
+
+```{r}
+ranking_dataframe["III", "Penny_rank"]
+```
+
+(25) Use this method (names rather than indexes) to undo the switch made in step 23 
+
+```{r}
+ranking_dataframe["II","Lenny_rank"] <- 6
+ranking_dataframe["V","Lenny_rank"] <- 7
+```
+
+Finally, a method that works only on data frames involves the “`$`” operator to access the columns of the data frame.  Recall from outputs above using `str()` that R refers to each column of a data frame as a “variable”.  E.g., for a data frame from step 12, `str()` will tell you that it is a “`'data.frame': 7 obs. of  5 variables:`”.   In this case, each person’s rankings are considered to be a “variable” in the data frame.  If “rankings” is a data frame, we can access all of one person’s rankings, e.g., Lenny’s, by typing: `rankings$Lenny`.  We could then access specific elements of Lenny’s rankings just as we did in step #9 above, that is, with a single number inside a set of square braces, e.g., Lenny’s ranking of Episode II could be accessed by typing: `rankings$Lenny[2]`.  
+(26) Use this last method to re-do the switch from step 23.
+
+```{r}
+ranking_dataframe $Jenny_rank [2] <- 7
+ranking_dataframe $Jenny_rank [5] <- 6
+```
+
+(27) **Please save your script as “YOURLASTNAME_Lab3.R”** in a "Lab03" directory inside your homework and labs directory.  add, commit, and push to turn it in
